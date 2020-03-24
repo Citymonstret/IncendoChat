@@ -1,0 +1,7 @@
+name: IncendoChat
+version: ${project.version}
+main: com.github.sauilitired.incendochat.IncendoChat
+api-version: 1.13
+depend: [Vault]
+softdepend: [PlaceholderAPI]
+authors: [Citymonstret]
