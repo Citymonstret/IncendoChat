@@ -43,4 +43,8 @@ public final class BukkitChatPlayer extends ChatPlayer {
         return this.key;
     }
 
+    @Override public @NotNull String getName() {
+        return this.bukkitPlayer.getName();
+    }
+
 }

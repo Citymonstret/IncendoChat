@@ -1,0 +1,16 @@
+channels:
+  global:
+    display_name: 'Global'
+    format:
+      - text: '&c[&6%channel%&c] '
+        hover: '&6Click to join this channel!'
+        click_type: 'SUGGEST_COMMAND'
+        click_text: '/channel %channel_id%'
+      - text: '%vault_prefix% %player_displayname%&7: '
+        hover: '&6Click to message this player!'
+        click_type: 'SUGGEST_COMMAND'
+        click_text: '/msg %player_name% '
+      - text: '&r%message%'
+    permission: ''
+    ping_format: '&c@%name%&r'
+    priority: -1

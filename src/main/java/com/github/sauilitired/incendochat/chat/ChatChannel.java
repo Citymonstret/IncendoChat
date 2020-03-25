@@ -13,12 +13,12 @@ import java.util.HashSet;
 public abstract class ChatChannel extends Keyed {
 
     private final String key;
-    private final int priority;
+    private final ChannelConfiguration channelConfiguration;
     private final Collection<ChatPlayer> subscribers = new HashSet<>();
 
-    public ChatChannel(@NotNull final String key, @NotNull final int priority) {
+    public ChatChannel(@NotNull final String key, @NotNull final ChannelConfiguration channelConfiguration) {
         this.key = Preconditions.checkNotNull(key);
-        this.priority = priority;
+        this.channelConfiguration = Preconditions.checkNotNull(channelConfiguration);
         this.subscribers.add(PlayerRegistry.registry.getServer());
         // Register the channel
         ChannelRegistry.registry.register(this);
@@ -42,8 +42,8 @@ public abstract class ChatChannel extends Keyed {
         return Collections.unmodifiableCollection(this.subscribers);
     }
 
-    public final int getPriority() {
-        return this.priority;
+    @NotNull public final ChannelConfiguration getChannelConfiguration() {
+        return this.channelConfiguration;
     }
 
 }

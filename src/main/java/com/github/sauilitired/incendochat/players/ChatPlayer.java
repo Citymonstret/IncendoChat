@@ -22,11 +22,18 @@ public abstract class ChatPlayer extends Keyed {
 
     /**
      * Get the player display name. This is the name
-     * that shows up in chat messages, etc.
+     * that shows up in chat messages, etc
      *
      * @return Player display name
      */
     @NotNull public abstract String getDisplayName();
+
+    /**
+     * Get the player name
+     *
+     * @return Player name
+     */
+    @NotNull public abstract String getName();
 
     /**
      * Send a message to the player

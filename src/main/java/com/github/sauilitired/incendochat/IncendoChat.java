@@ -10,7 +10,6 @@ public final class IncendoChat extends JavaPlugin {
 
     @Override public void onEnable() {
         this.chatHandler = new ChatHandler();
-
         getServer().getPluginManager().registerEvents(new ChatListener(this.chatHandler), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }

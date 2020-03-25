@@ -23,4 +23,8 @@ public final class ServerChatPlayer extends ChatPlayer {
         return "server";
     }
 
+    @Override public @NotNull String getName() {
+        return "Server";
+    }
+
 }
