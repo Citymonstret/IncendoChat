@@ -47,4 +47,8 @@ public final class BukkitChatPlayer extends ChatPlayer {
         return this.bukkitPlayer.getName();
     }
 
+    @Override public boolean hasPermission(@NotNull final String permission) {
+        return this.bukkitPlayer.hasPermission(permission);
+    }
+
 }

@@ -95,4 +95,12 @@ public abstract class ChatPlayer extends Keyed {
         }
     }
 
+    /**
+     * Check if the player has a specific permission node
+     *
+     * @param permission Permission node
+     * @return True if the player has the permission, false if not
+     */
+    public abstract boolean hasPermission(@NotNull final String permission);
+
 }

@@ -6,6 +6,8 @@ channels:
         hover: '&6Click to join this channel!'
         click_type: 'SUGGEST_COMMAND'
         click_text: '/channel %channel_id%'
+      - text: '&c[&6%player_uuid%&c]'
+        permission: 'incendochat.admin'
       - text: '%vault_prefix% %player_displayname%&7: '
         hover: '&6Click to message this player!'
         click_type: 'SUGGEST_COMMAND'

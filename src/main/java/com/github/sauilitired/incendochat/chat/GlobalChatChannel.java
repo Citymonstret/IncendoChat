@@ -10,8 +10,8 @@ import java.util.Set;
 
 public final class GlobalChatChannel extends ChatChannel {
 
-    public GlobalChatChannel() {
-        super("global", -1);
+    public GlobalChatChannel(final ChannelConfiguration channelConfiguration) {
+        super("global", channelConfiguration);
     }
 
     @Override public boolean isValid(@NotNull ChatPlayer player) {

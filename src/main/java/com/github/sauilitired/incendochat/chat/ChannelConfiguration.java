@@ -52,7 +52,13 @@ public class ChannelConfiguration {
             } else {
                 clickText = "";
             }
-            sections.add(new ChannelFormatSection(text, hover, clickType, clickText));
+            final String permission;
+            if (formatSection.containsKey("permission")) {
+                permission = formatSection.get("permission").toString();
+            } else {
+                permission = "";
+            }
+            sections.add(new ChannelFormatSection(text, hover, clickType, clickText, permission));
         }
         final String permission = section.getString("permission", "");
         final int priority = section.getInt("priority", -1);
@@ -86,13 +92,15 @@ public class ChannelConfiguration {
         private final String hoverText;
         private final ClickEvent.Action clickAction;
         private final String clickText;
+        private final String permission;
 
         public ChannelFormatSection(final String text, final String hoverText,
-            final ClickEvent.Action clickAction, final String clickText) {
+            final ClickEvent.Action clickAction, final String clickText, final String permission) {
             this.text = text;
             this.hoverText = hoverText;
             this.clickAction = clickAction;
             this.clickText = clickText;
+            this.permission = permission;
         }
 
         public String getText() {
@@ -109,6 +117,10 @@ public class ChannelConfiguration {
 
         public String getClickText() {
             return clickText;
+        }
+
+        public String getPermission() {
+            return permission;
         }
     }
 

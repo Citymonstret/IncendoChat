@@ -27,4 +27,8 @@ public final class ServerChatPlayer extends ChatPlayer {
         return "Server";
     }
 
+    @Override public boolean hasPermission(@NotNull final String permission) {
+        return true;
+    }
+
 }

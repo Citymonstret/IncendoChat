@@ -75,6 +75,10 @@ public class ChatHandler {
                 final var builder = TextComponent.builder();
                 for (final ChannelConfiguration.ChannelFormatSection channelFormatSection :
                     chatChannel.getChannelConfiguration().getChannelFormatSections()) {
+                    if (!channelFormatSection.getPermission().isEmpty() &&
+                        !player.hasPermission(channelFormatSection.getPermission())) {
+                        continue;
+                    }
                     final String textFormat = this.handleText(chatChannel, player, channelFormatSection.getText());
                     String messageText = stripColor(text);
                     if (chatChannel.getChannelConfiguration().getPingFormat() != null && text.contains(String.format("@%s", player))) {
