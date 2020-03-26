@@ -4,6 +4,7 @@ import com.github.sauilitired.incendochat.chat.ChannelConfiguration;
 import com.github.sauilitired.incendochat.chat.ChannelRegistry;
 import com.github.sauilitired.incendochat.chat.ChatChannel;
 import com.github.sauilitired.incendochat.chat.ChatMessage;
+import com.github.sauilitired.incendochat.event.ChannelMessageEvent;
 import com.github.sauilitired.incendochat.players.BukkitChatPlayer;
 import com.github.sauilitired.incendochat.players.ChatPlayer;
 import com.google.common.base.Preconditions;
@@ -69,8 +70,24 @@ public class ChatHandler {
             if (!chatChannel.isValid(player)) {
                 return;
             }
-            final Collection<ChatPlayer> receivers = chatChannel.getSubscribers();
-            for (final ChatPlayer receiver : receivers) {
+
+            // Get the recipients
+            Collection<ChatPlayer> recipients = chatChannel.getSubscribers();
+
+            // Non-final copy of the text, so that it can be replaced in the event
+            String message = text;
+
+            // Send the event and check for cancellation
+            final ChannelMessageEvent channelMessageEvent = new ChannelMessageEvent(chatChannel, player, message, recipients);
+            Bukkit.getPluginManager().callEvent(channelMessageEvent);
+            if (channelMessageEvent.isCancelled()) {
+                return;
+            } else {
+                recipients = channelMessageEvent.getRecipients();
+                message = channelMessageEvent.getMessage();
+            }
+
+            for (final ChatPlayer receiver : recipients) {
                 // Go through all message parts and compile them
                 final var builder = TextComponent.builder();
                 for (final ChannelConfiguration.ChannelFormatSection channelFormatSection :
@@ -80,8 +97,8 @@ public class ChatHandler {
                         continue;
                     }
                     final String textFormat = this.handleText(chatChannel, player, channelFormatSection.getText());
-                    String messageText = stripColor(text);
-                    if (chatChannel.getChannelConfiguration().getPingFormat() != null && text.contains(String.format("@%s", player))) {
+                    String messageText = stripColor(message);
+                    if (chatChannel.getChannelConfiguration().getPingFormat() != null && message.contains(String.format("@%s", player))) {
                         messageText = StringUtils.replaceIgnoreCase(messageText, "@" + receiver.getName(),
                             ChatColor.translateAlternateColorCodes('&',
                                 chatChannel.getChannelConfiguration().getPingFormat().replace("%name%", receiver.getName())));

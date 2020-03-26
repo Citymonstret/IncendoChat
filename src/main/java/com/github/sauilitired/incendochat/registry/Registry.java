@@ -21,12 +21,12 @@ public abstract class Registry<T extends Keyed> {
         return Optional.ofNullable(this.registry.get(Preconditions.checkNotNull(key).toLowerCase()));
     }
 
-    public final void register(@NotNull final T object) {
+    public void register(@NotNull final T object) {
         Preconditions.checkNotNull(object);
         this.registry.put(object.getKey().toLowerCase(), object);
     }
 
-    public final void deregister(@NotNull final T object) {
+    public void deregister(@NotNull final T object) {
         Preconditions.checkNotNull(object);
         this.registry.remove(object.getKey().toLowerCase());
     }

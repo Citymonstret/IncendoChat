@@ -1,9 +1,12 @@
 package com.github.sauilitired.incendochat.chat;
 
+import com.github.sauilitired.incendochat.event.ChannelSubscribeEvent;
+import com.github.sauilitired.incendochat.event.ChannelUnsubscribeEvent;
 import com.github.sauilitired.incendochat.players.ChatPlayer;
 import com.github.sauilitired.incendochat.players.PlayerRegistry;
 import com.github.sauilitired.incendochat.registry.Keyed;
 import com.google.common.base.Preconditions;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -32,10 +35,12 @@ public abstract class ChatChannel extends Keyed {
 
     public void registerSubscriber(@NotNull final ChatPlayer player) {
         this.subscribers.add(Preconditions.checkNotNull(player));
+        Bukkit.getPluginManager().callEvent(new ChannelSubscribeEvent(this, player));
     }
 
     public void deregisterSubscriber(@NotNull final ChatPlayer player) {
         this.subscribers.remove(Preconditions.checkNotNull(player));
+        Bukkit.getPluginManager().callEvent(new ChannelUnsubscribeEvent(this, player));
     }
 
     @NotNull public Collection<ChatPlayer> getSubscribers() {
