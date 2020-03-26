@@ -16,3 +16,11 @@ channels:
     permission: ''
     ping_format: '&c@%name%&r'
     priority: -1
+messages:
+  help-header: '&6&lIncendoChat&8> &7Help'
+  list-header: '&6&lIncendoChat&8> &7Channel List'
+  list-header-active: '&eActive Channels:'
+  list-header-available: '&eAvailable Channels:'
+  list-item: '&7- &6%channel%'
+  list-hover-join: '&6Click to join the channel'
+  list-hover-leave: '&6Click to leave the channel'

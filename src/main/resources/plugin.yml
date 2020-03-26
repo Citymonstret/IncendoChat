@@ -8,3 +8,11 @@ authors: [Citymonstret]
 permissions:
   incendochat.admin:
     default: op
+  incendochat.channel:
+    default: op
+  incendochat.channel.join:
+    default: op
+  incendochat.channel.leave:
+    default: op
+  incendochat.channel.list:
+    default: op
