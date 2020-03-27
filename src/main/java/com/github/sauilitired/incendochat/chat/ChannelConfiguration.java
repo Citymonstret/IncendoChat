@@ -1,3 +1,20 @@
+/*
+    Simple channel based chat plugin for Spigot
+    Copyright (C) 2020 Alexander Söderberg
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.github.sauilitired.incendochat.chat;
 
 import net.kyori.text.event.ClickEvent;
@@ -7,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ChannelConfiguration {
+/**
+ * Configuration for {@link ChatChannel}
+ */
+public final class ChannelConfiguration {
 
     private final String displayName;
     private final int priority;
@@ -15,7 +35,7 @@ public class ChannelConfiguration {
     private final List<ChannelFormatSection> channelFormatSections;
     private final String pingFormat;
 
-    private ChannelConfiguration(final String displayName, final int priority, final String permission,
+    public ChannelConfiguration(final String displayName, final int priority, final String permission,
         final List<ChannelFormatSection> channelFormatSections, final String pingFormat) {
         this.displayName = displayName;
         this.priority = priority;

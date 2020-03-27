@@ -3,9 +3,9 @@ channels:
     display_name: 'Global'
     format:
       - text: '&c[&6%channel%&c] '
-        hover: '&6Click to join this channel!'
+        hover: '&6Click to switch to this channel!'
         click_type: 'SUGGEST_COMMAND'
-        click_text: '/channel %channel_id%'
+        click_text: '/channel set %channel_id%'
       - text: '&c[&6%player_uuid%&c]'
         permission: 'incendochat.admin'
       - text: '%vault_prefix% %player_displayname%&7: '
@@ -17,10 +17,13 @@ channels:
     ping_format: '&c@%name%&r'
     priority: -1
 messages:
-  help-header: '&6&lIncendoChat&8> &7Help'
   list-header: '&6&lIncendoChat&8> &7Channel List'
-  list-header-active: '&eActive Channels:'
-  list-header-available: '&eAvailable Channels:'
+  list-header-active: '&eActive Channels (Click to leave):'
+  list-header-available: '&eAvailable Channels (Click to join):'
   list-item: '&7- &6%channel%'
+  list-item-current: '&7- &6%channel% (Current)'
   list-hover-join: '&6Click to join the channel'
   list-hover-leave: '&6Click to leave the channel'
+  active-channel-set: '&6&lIncendoChat&8> &7Your active channel was set to: %channel%'
+  channel-joined: '&6&lIncendoChat&8> &7You joined channel: %channel%'
+  channel-left: '&6&lIncendoChat&8> &7You left channel: %channel%'

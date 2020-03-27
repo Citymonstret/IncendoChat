@@ -1,3 +1,20 @@
+/*
+    Simple channel based chat plugin for Spigot
+    Copyright (C) 2020 Alexander Söderberg
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.github.sauilitired.incendochat;
 
 import com.github.sauilitired.incendochat.chat.ChannelConfiguration;
@@ -54,7 +71,7 @@ public class ChatHandler {
                     final List<ChatChannel> channels = new ArrayList<>(player.getActiveChannels());
                     if (channels.isEmpty()) {
                         // Use the global channel
-                        chatChannel = ChannelRegistry.registry.getGlobalChatChannel();
+                        chatChannel = ChannelRegistry.getRegistry().getGlobalChatChannel();
                     } else {
                         channels.sort(Comparator.<ChatChannel>comparingInt(
                             channel -> channel.getChannelConfiguration().getPriority()).reversed());
@@ -89,29 +106,36 @@ public class ChatHandler {
 
             for (final ChatPlayer receiver : recipients) {
                 // Go through all message parts and compile them
-                final var builder = TextComponent.builder();
+                final TextComponent.Builder builder = TextComponent.builder();
                 for (final ChannelConfiguration.ChannelFormatSection channelFormatSection :
                     chatChannel.getChannelConfiguration().getChannelFormatSections()) {
                     if (!channelFormatSection.getPermission().isEmpty() &&
                         !player.hasPermission(channelFormatSection.getPermission())) {
                         continue;
                     }
+                    final TextComponent.Builder innerBuilder = TextComponent.builder();
                     final String textFormat = this.handleText(chatChannel, player, channelFormatSection.getText());
                     String messageText = stripColor(message);
-                    if (chatChannel.getChannelConfiguration().getPingFormat() != null && message.contains(String.format("@%s", player))) {
+                    if (chatChannel.getChannelConfiguration().getPingFormat() != null && message.contains(String.format("@%s", receiver.getName()))) {
                         messageText = StringUtils.replaceIgnoreCase(messageText, "@" + receiver.getName(),
                             ChatColor.translateAlternateColorCodes('&',
                                 chatChannel.getChannelConfiguration().getPingFormat().replace("%name%", receiver.getName())));
                     }
-                    builder.append(LegacyComponentSerializer.INSTANCE.deserialize(textFormat.replace("%message%", messageText), '&'));
+                    innerBuilder.append(LegacyComponentSerializer.INSTANCE.deserialize(textFormat.replace("%message%", messageText), '&'));
                     if (channelFormatSection.getHoverText() != null && !channelFormatSection.getHoverText().isEmpty()) {
-                        builder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, LegacyComponentSerializer
+                        innerBuilder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, LegacyComponentSerializer
                             .INSTANCE.deserialize(handleText(chatChannel, player, channelFormatSection.getHoverText()), '&')));
+                    } else {
+                        innerBuilder.hoverEvent(null);
                     }
                     if (channelFormatSection.getClickText() != null && channelFormatSection.getClickAction() != null &&
                         !channelFormatSection.getClickText().isEmpty()) {
-                        builder.clickEvent(ClickEvent.of(channelFormatSection.getClickAction(), channelFormatSection.getHoverText()));
+                        innerBuilder.clickEvent(ClickEvent.of(channelFormatSection.getClickAction(),
+                            handleText(chatChannel, player, channelFormatSection.getClickText())));
+                    } else {
+                        innerBuilder.clickEvent(null);
                     }
+                    builder.append(innerBuilder.build());
                 }
                 receiver.sendMessage(new ChatMessage(chatChannel, player, builder.build()));
             }

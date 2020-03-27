@@ -2,7 +2,7 @@ name: IncendoChat
 version: ${project.version}
 main: com.github.sauilitired.incendochat.IncendoChat
 api-version: 1.13
-depend: [PlaceholderAPI, Vault]
+depend: [PlaceholderAPI]
 softdepend: []
 authors: [Citymonstret]
 permissions:
@@ -15,4 +15,8 @@ permissions:
   incendochat.channel.leave:
     default: op
   incendochat.channel.list:
+    default: op
+  incendochat.channel.set:
+    default: op
+  incendochat.channel.send:
     default: op

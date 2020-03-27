@@ -1,3 +1,20 @@
+/*
+    Simple channel based chat plugin for Spigot
+    Copyright (C) 2020 Alexander Söderberg
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.github.sauilitired.incendochat;
 
 import co.aikar.commands.PaperCommandManager;
@@ -33,14 +50,14 @@ public final class IncendoChat extends JavaPlugin {
                 if (channelConfiguration != null) {
                     final ChannelConfiguration channel = ChannelConfiguration.parse(channelConfiguration);
                     if (channelName.equalsIgnoreCase("global")) {
-                        ChannelRegistry.registry.setGlobalChatChannel(new GlobalChatChannel(channel));
+                        ChannelRegistry.getRegistry().setGlobalChatChannel(new GlobalChatChannel(channel));
                     } else {
-                        ChannelRegistry.registry.register(new StaticChatChannel(channelName.toLowerCase(), channel));
+                        ChannelRegistry.getRegistry().register(new StaticChatChannel(channelName.toLowerCase(), channel));
                     }
                 }
             }
         }
-        getLogger().info(String.format("Parsed %d chat channels", ChannelRegistry.registry.getAll().size()));
+        getLogger().info(String.format("Parsed %d chat channels", ChannelRegistry.getRegistry().getAll().size()));
 
         // Read messages
         this.messages = fileConfiguration.getConfigurationSection("messages");
@@ -56,6 +73,10 @@ public final class IncendoChat extends JavaPlugin {
 
     @NotNull public ConfigurationSection getMessages() {
         return this.messages;
+    }
+
+    @NotNull public ChatHandler getChatHandler() {
+        return this.chatHandler;
     }
 
 }
