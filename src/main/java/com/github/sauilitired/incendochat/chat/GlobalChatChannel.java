@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class GlobalChatChannel extends ChatChannel {
+public final class GlobalChatChannel extends StaticChatChannel {
 
     public GlobalChatChannel(final ChannelConfiguration channelConfiguration) {
         super("global", channelConfiguration);
