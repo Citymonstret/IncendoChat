@@ -14,7 +14,7 @@ Other features may be added further on.
 
 This plugin will not:
 - Handle mutes, punishments, etc. Use a punishment plugin for this.
-- Handle swear blocking, spam blocking etc. I recommend [AdvSwearBlock](https://www.spigotmc.org/resources/advswearblock.57612/).
+- Handle swear blocking, spam blocking etc.
 - Handle chat logging, etc.
 
 ## Requirements
