@@ -63,7 +63,7 @@ public class ChatHandler {
                 player.updateChannels();
                 // Check if the player has a configured active channel
                 final ChatChannel activeChannel = player.getActiveChannel();
-                if (activeChannel != null && !activeChannel.isValid(player)) {
+                if (activeChannel != null && activeChannel.isValid(player)) {
                     chatChannel = activeChannel;
                 } else {
                     // If the player does not have an active channel, select the highest
