@@ -42,6 +42,9 @@ public final class ServerChatPlayer extends ChatPlayer {
     }
 
     @Override public void sendMessage(@NotNull final ChatMessage message) {
+        if (message.getMessage() == null) {
+            return;
+        }
         this.sendMessage(message.getMessage());
     }
 

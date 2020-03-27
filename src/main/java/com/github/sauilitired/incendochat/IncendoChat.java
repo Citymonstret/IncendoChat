@@ -25,6 +25,7 @@ import com.github.sauilitired.incendochat.chat.StaticChatChannel;
 import com.github.sauilitired.incendochat.commands.ChannelCommand;
 import com.github.sauilitired.incendochat.listeners.ChatListener;
 import com.github.sauilitired.incendochat.listeners.PlayerListener;
+import com.github.sauilitired.incendochat.persistence.PersistenceHandler;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,9 +35,9 @@ public final class IncendoChat extends JavaPlugin {
 
     private ChatHandler chatHandler;
     private ConfigurationSection messages;
+    private PersistenceHandler persistenceHandler;
 
     @Override public void onEnable() {
-        this.chatHandler = new ChatHandler();
 
         // Save default configuration
         this.saveDefaultConfig();
@@ -62,6 +63,12 @@ public final class IncendoChat extends JavaPlugin {
         // Read messages
         this.messages = fileConfiguration.getConfigurationSection("messages");
 
+        // Setup persistence handler
+        this.persistenceHandler = new PersistenceHandler(fileConfiguration.getConfigurationSection("persistence"));
+
+        // Setup chat handler
+        this.chatHandler = new ChatHandler(this.persistenceHandler);
+
         // Register events
         getServer().getPluginManager().registerEvents(new ChatListener(this.chatHandler), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
@@ -77,6 +84,10 @@ public final class IncendoChat extends JavaPlugin {
 
     @NotNull public ChatHandler getChatHandler() {
         return this.chatHandler;
+    }
+
+    @NotNull public PersistenceHandler getPersistenceHandler() {
+        return this.persistenceHandler;
     }
 
 }

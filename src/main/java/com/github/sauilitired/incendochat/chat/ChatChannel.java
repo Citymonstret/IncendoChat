@@ -69,14 +69,23 @@ public abstract class ChatChannel extends Keyed {
 
     public abstract boolean isValid(@NotNull final ChatPlayer player);
 
-    public void registerSubscriber(@NotNull final ChatPlayer player) {
-        this.subscribers.add(Preconditions.checkNotNull(player));
-        Bukkit.getPluginManager().callEvent(new ChannelSubscribeEvent(this, player));
+    public boolean registerSubscriber(@NotNull final ChatPlayer player) {
+        if (!this.subscribers.contains(Preconditions.checkNotNull(player))) {
+            this.subscribers.add(player);
+            Bukkit.getPluginManager().callEvent(new ChannelSubscribeEvent(this, player));
+            return true;
+        }
+        return false;
     }
 
-    public void deregisterSubscriber(@NotNull final ChatPlayer player) {
-        this.subscribers.remove(Preconditions.checkNotNull(player));
-        Bukkit.getPluginManager().callEvent(new ChannelUnsubscribeEvent(this, player));
+    public boolean deregisterSubscriber(@NotNull final ChatPlayer player) {
+        if (this.subscribers.contains(Preconditions.checkNotNull(player))) {
+            this.subscribers.remove(Preconditions.checkNotNull(player));
+            Bukkit.getPluginManager().callEvent(new ChannelUnsubscribeEvent(this, player));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @NotNull public Collection<ChatPlayer> getSubscribers() {

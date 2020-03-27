@@ -22,6 +22,7 @@ import com.github.sauilitired.incendochat.chat.ChannelRegistry;
 import com.github.sauilitired.incendochat.chat.ChatChannel;
 import com.github.sauilitired.incendochat.chat.ChatMessage;
 import com.github.sauilitired.incendochat.event.ChannelMessageEvent;
+import com.github.sauilitired.incendochat.persistence.PersistenceHandler;
 import com.github.sauilitired.incendochat.players.BukkitChatPlayer;
 import com.github.sauilitired.incendochat.players.ChatPlayer;
 import com.google.common.base.Preconditions;
@@ -50,6 +51,12 @@ public class ChatHandler {
 
     private static String stripColor(@NotNull final String input) {
         return STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+    }
+
+    private final PersistenceHandler persistenceHandler;
+
+    public ChatHandler(@NotNull final PersistenceHandler persistenceHandler) {
+        this.persistenceHandler = Preconditions.checkNotNull(persistenceHandler);
     }
 
     public void handleMessage(@Nullable final ChatChannel forcedChannel,
@@ -137,8 +144,11 @@ public class ChatHandler {
                     }
                     builder.append(innerBuilder.build());
                 }
-                receiver.sendMessage(new ChatMessage(chatChannel, player, builder.build()));
+                receiver.sendMessage(new ChatMessage(chatChannel, player, builder.build(), message));
             }
+            // Log message
+            this.persistenceHandler.logMessage(new ChatMessage(chatChannel, player, null,
+                ChatColor.stripColor(message)));
         };
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(IncendoChat

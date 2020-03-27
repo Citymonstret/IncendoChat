@@ -17,6 +17,7 @@
  */
 package com.github.sauilitired.incendochat.chat;
 
+import com.github.sauilitired.incendochat.IncendoChat;
 import com.github.sauilitired.incendochat.players.ChatPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,22 @@ public class StaticChatChannel extends ChatChannel {
 
     @Override public boolean isValid(@NotNull ChatPlayer player) {
         return true;
+    }
+
+    @Override public boolean registerSubscriber(@NotNull ChatPlayer player) {
+        if (super.registerSubscriber(player)) {
+            IncendoChat.getPlugin(IncendoChat.class).getPersistenceHandler().registerSubscription(player, this);
+            return true;
+        }
+        return false;
+    }
+
+    @Override public boolean deregisterSubscriber(@NotNull ChatPlayer player) {
+        if (super.deregisterSubscriber(player)) {
+            IncendoChat.getPlugin(IncendoChat.class).getPersistenceHandler().registerUnsubscription(player, this);
+            return true;
+        }
+        return false;
     }
 
 }

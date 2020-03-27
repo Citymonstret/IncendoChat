@@ -9,6 +9,7 @@ Very simple channel based chat plugin. Will support the following features:
 - @player ping notifications
 - API to interact with chat players, channels, etc, plus events for: channel join,
  channel leave, channel creation and channel messages
+- (Optional) chat logging
 
 Other features may be added further on.
 
@@ -18,7 +19,6 @@ This plugin will not:
 and [ChatEx](https://dev.bukkit.org/projects/chatex) for this functionality. IncendoChat
 is compatible with plugins such as these, that alter chat messages, and will respect
 their rules.
-- Handle chat logging, etc.
 
 ## Requirements
 - You need to have [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) installed.
@@ -71,6 +71,19 @@ channels:
     # be the active channel, when channels are
     # re-calculates
     priority: -1
+persistence:
+  # Whether chat should be logged to the database
+  chat-logging: false
+  chat-logging-interval: 100 # every 100th tick
+  # Whether channel memberships should persist
+  channel-persistence: false
+  # MySQL settings
+  mysql:
+    host: 'localhost'
+    port: 3306
+    username: 'username'
+    password: 'password'
+    database: 'chat'
 # Configurable messages
 messages:
   list-header: '&6&lIncendoChat&8> &7Channel List'

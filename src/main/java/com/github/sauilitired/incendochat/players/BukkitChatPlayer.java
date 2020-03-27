@@ -56,6 +56,9 @@ public final class BukkitChatPlayer extends ChatPlayer {
     }
 
     @Override public void sendMessage(@NotNull ChatMessage message) {
+        if (message.getMessage() == null) {
+            return;
+        }
         TextAdapter.sendComponent(this.bukkitPlayer, message.getMessage());
     }
 

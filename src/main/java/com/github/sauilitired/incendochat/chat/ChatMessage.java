@@ -21,6 +21,7 @@ import com.github.sauilitired.incendochat.players.ChatPlayer;
 import com.google.common.base.Preconditions;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This object represents a chat message, sent in a {@link ChatChannel channel}
@@ -31,12 +32,14 @@ public final class ChatMessage {
     private final ChatChannel channel;
     private final ChatPlayer sender;
     private final Component message;
+    private final String rawMessage;
 
     public ChatMessage(@NotNull final ChatChannel chatChannel, @NotNull final ChatPlayer sender,
-        @NotNull final Component message) {
+        @Nullable final Component message, @NotNull final String rawMessage) {
         this.channel = Preconditions.checkNotNull(chatChannel);
         this.sender = Preconditions.checkNotNull(sender);
-        this.message = Preconditions.checkNotNull(message);
+        this.message = message;
+        this.rawMessage = Preconditions.checkNotNull(rawMessage);
     }
 
     /**
@@ -44,7 +47,7 @@ public final class ChatMessage {
      *
      * @return Sent message
      */
-    @NotNull public Component getMessage() {
+    @Nullable public Component getMessage() {
         return this.message;
     }
 
@@ -64,6 +67,15 @@ public final class ChatMessage {
      */
     @NotNull public ChatChannel getChannel() {
         return this.channel;
+    }
+
+    /**
+     * Get the raw, unaltered message, sent by the sender
+     *
+     * @return Raw message
+     */
+    @NotNull public String getRawMessage() {
+        return this.rawMessage;
     }
 
 }

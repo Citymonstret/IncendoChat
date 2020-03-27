@@ -1,21 +1,52 @@
+# Pre-configured chat channels
 channels:
+  # The global (default channel)
   global:
+    # Name that shows up in the format, and in /ch list
     display_name: 'Global'
+    # Format fragments. All of them are joined together to form
+    # a single message
     format:
+      # The text that is sent. Supports PlaceholderAPI placeholders
+      # + %channel% and %channel_displayname%, and & color codes
       - text: '&c[&6%channel%&c] '
+        # Message sent on text hover. Set to '' to disable
         hover: '&6Click to switch to this channel!'
+        # Action performed on click. Set to '' to disable
         click_type: 'SUGGEST_COMMAND'
+        # Text inserted on click. Set to '' to disable
         click_text: '/channel set %channel_id%'
       - text: '&c[&6%player_uuid%&c]'
+        # Only players with the specified permission will receive this
+        # fragment
         permission: 'incendochat.admin'
       - text: '%vault_prefix% %player_displayname%&7: '
         hover: '&6Click to message this player!'
         click_type: 'SUGGEST_COMMAND'
         click_text: '/msg %player_name% '
       - text: '&r%message%'
+    # Permission needed to join the channel. Set to '' to disable
     permission: ''
+    # @username ping replacement text. Set to '' to disable
     ping_format: '&c@%name%&r'
+    # The priority determines which channel will
+    # be the active channel, when channels are
+    # re-calculates
     priority: -1
+persistence:
+  # Whether chat should be logged to the database
+  chat-logging: false
+  chat-logging-interval: 100 # every 100th tick
+  # Whether channel memberships should persist
+  channel-persistence: false
+  # MySQL settings
+  mysql:
+    host: 'localhost'
+    port: 3306
+    username: 'username'
+    password: 'password'
+    database: 'chat'
+# Configurable messages
 messages:
   list-header: '&6&lIncendoChat&8> &7Channel List'
   list-header-active: '&eActive Channels (Click to leave):'
