@@ -81,3 +81,26 @@ messages:
   channel-joined: '&6&lIncendoChat&8> &7You joined channel: %channel%'
   channel-left: '&6&lIncendoChat&8> &7You left channel: %channel%'
 ```
+
+## Maven Repo
+
+We use [JitPack](https://jitpack.io/#Sauilitired/IncendoCha)
+
+Repository:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Dependency:
+```xml
+<dependency>
+    <groupId>com.github.Sauilitired</groupId>
+    <artifactId>IncendoChat</artifactId>
+    <version>master-4205f0f492-1</version>
+</dependency>
+```
