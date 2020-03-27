@@ -14,7 +14,10 @@ Other features may be added further on.
 
 This plugin will not:
 - Handle mutes, punishments, etc. Use a punishment plugin for this.
-- Handle swear blocking, spam blocking etc.
+- Handle swear blocking, spam blocking etc. I recommend [ChatControl](https://www.spigotmc.org/resources/chatcontrol™-the-ultimate-chat-plugin-500-000-downloads-1-2-5-1-15-2.271/)
+and [ChatEx](https://dev.bukkit.org/projects/chatex) for this functionality. IncendoChat
+is compatible with plugins such as these, that alter chat messages, and will respect
+their rules.
 - Handle chat logging, etc.
 
 ## Requirements
