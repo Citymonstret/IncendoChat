@@ -27,11 +27,11 @@ their rules.
 
 ## Commands
 - **/ch help** - Display the help text (Permission: `incendochat.channel`)
-- **/ch join \<channel\>** - Join a channel (Permission: `incendochat.join`)
-- **/ch leave \<channel\>** - Leave a channel (Permission: `incendochat.leavel`)
-- **/ch set \<channel\>** - Make the channel your active channel (Permission: `incendochat.set`)
-- **/ch send \<channel\> \<msg...\>** - Send a message to a channel you're in (Permission: `incendochat.send`)
-- **/ch list** - List all channels (Permission: `incendochat.list`)
+- **/ch join \<channel\>** - Join a channel (Permission: `incendochat.channel.join`)
+- **/ch leave \<channel\>** - Leave a channel (Permission: `incendochat.channel.leave`)
+- **/ch set \<channel\>** - Make the channel your active channel (Permission: `incendochat.channel.set`)
+- **/ch send \<channel\> \<msg...\>** - Send a message to a channel you're in (Permission: `incendochat.channel.send`)
+- **/ch list** - List all channels (Permission: `incendochat.channel.list`)
 
 ## Configuration Reference
 
