@@ -140,11 +140,15 @@ public class ChatHandler {
                     final TextComponent.Builder innerBuilder = TextComponent.builder();
                     final String textFormat = this.handleText(chatChannel, player, channelFormatSection.getText());
                     String messageText = stripColor(message);
-                    if (chatChannel.getChannelConfiguration().getPingFormat() != null && message.contains(String.format("@%s", receiver.getName()))) {
+
+                    // Handle pinging
+                    if (chatChannel.getChannelConfiguration().getPingFormat() != null &&
+                        !chatChannel.getChannelConfiguration().getPingFormat().isEmpty()) {
                         messageText = StringUtils.replaceIgnoreCase(messageText, "@" + receiver.getName(),
                             ChatColor.translateAlternateColorCodes('&',
                                 chatChannel.getChannelConfiguration().getPingFormat().replace("%name%", receiver.getName())));
                     }
+
                     innerBuilder.append(LegacyComponentSerializer.INSTANCE.deserialize(textFormat.replace("%message%", messageText), '&'));
                     if (channelFormatSection.getHoverText() != null && !channelFormatSection.getHoverText().isEmpty()) {
                         innerBuilder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, LegacyComponentSerializer
