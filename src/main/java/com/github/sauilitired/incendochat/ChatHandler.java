@@ -111,6 +111,23 @@ public class ChatHandler {
                 message = channelMessageEvent.getMessage();
             }
 
+            this.sendMessage(message, chatChannel, player, recipients);
+
+            // Log message
+            this.persistenceHandler.logMessage(new ChatMessage(chatChannel, player, null,
+                ChatColor.stripColor(message)));
+        };
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(IncendoChat
+                .getPlugin(IncendoChat.class), messageTask);
+        } else {
+            messageTask.run();
+        }
+    }
+
+    public void sendMessage(final String message, final ChatChannel chatChannel,
+        final ChatPlayer player, final Collection<ChatPlayer> recipients) {
+        final Runnable sendTask = () -> {
             for (final ChatPlayer receiver : recipients) {
                 // Go through all message parts and compile them
                 final TextComponent.Builder builder = TextComponent.builder();
@@ -146,15 +163,12 @@ public class ChatHandler {
                 }
                 receiver.sendMessage(new ChatMessage(chatChannel, player, builder.build(), message));
             }
-            // Log message
-            this.persistenceHandler.logMessage(new ChatMessage(chatChannel, player, null,
-                ChatColor.stripColor(message)));
         };
         if (Bukkit.isPrimaryThread()) {
             Bukkit.getScheduler().runTaskAsynchronously(IncendoChat
-                .getPlugin(IncendoChat.class), messageTask);
+                .getPlugin(IncendoChat.class), sendTask);
         } else {
-            messageTask.run();
+            sendTask.run();
         }
     }
 
