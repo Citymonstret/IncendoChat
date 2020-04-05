@@ -163,8 +163,8 @@ public class ChatHandler {
                         while (matcher.find()) {
                             final String group = matcher.group();
                             // Everything before the group and after oldIndex is treated as a normal message
-                            final int maxIndex = messageText.indexOf(group);
-                            final String normalMessage = message.substring(oldIndex, maxIndex);
+                            final int maxIndex = messageText.indexOf(group, oldIndex);
+                            final String normalMessage = messageText.substring(oldIndex, maxIndex);
                             // Replace the normal message
                             final TextComponent.Builder innerBuilder = TextComponent.builder();
                             this.handleFormatting(builder, innerBuilder, chatChannel, player,
@@ -178,10 +178,10 @@ public class ChatHandler {
                             }
                             oldIndex = maxIndex + group.length();
                         }
-                        if (oldIndex + 1 <= message.length()) {
+                        if (oldIndex + 1 <= messageText.length()) {
                             final TextComponent.Builder innerBuilder = TextComponent.builder();
                             this.handleFormatting(builder, innerBuilder, chatChannel, player,
-                                channelFormatSection, textFormat, message.substring(oldIndex));
+                                channelFormatSection, textFormat, messageText.substring(oldIndex));
                         }
                     }
                 }
