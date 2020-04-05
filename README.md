@@ -10,6 +10,8 @@ Very simple channel based chat plugin. Will support the following features:
 - API to interact with chat players, channels, etc, plus events for: channel join,
  channel leave, channel creation and channel messages
 - (Optional) chat logging
+- Format fragments. Currently supports `[i]`/`[item]`, which will be replaced by 
+  the item in the player's main hand (hoverable!)
 
 Other features may be added further on.
 

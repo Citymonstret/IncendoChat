@@ -21,6 +21,7 @@ import com.github.sauilitired.incendochat.chat.ChannelConfiguration;
 import com.github.sauilitired.incendochat.chat.ChannelRegistry;
 import com.github.sauilitired.incendochat.chat.ChatChannel;
 import com.github.sauilitired.incendochat.chat.ChatMessage;
+import com.github.sauilitired.incendochat.chat.fragments.ChatFragment;
 import com.github.sauilitired.incendochat.event.ChannelMessageEvent;
 import com.github.sauilitired.incendochat.persistence.PersistenceHandler;
 import com.github.sauilitired.incendochat.players.BukkitChatPlayer;
@@ -41,19 +42,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatHandler {
 
     private static final Pattern
         STRIP_COLOR_PATTERN = Pattern.compile("(?i)&[0-9A-FK-OR]");
+    private static final Pattern FRAGMENT_PATTERN = Pattern.compile("\\[(?<key>\\S+)]");
 
     private static String stripColor(@NotNull final String input) {
         return STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
     private final PersistenceHandler persistenceHandler;
+    private final Set<ChatFragment> fragments = new HashSet<>();
 
     public ChatHandler(@NotNull final PersistenceHandler persistenceHandler) {
         this.persistenceHandler = Preconditions.checkNotNull(persistenceHandler);
@@ -137,7 +143,6 @@ public class ChatHandler {
                         !player.hasPermission(channelFormatSection.getPermission())) {
                         continue;
                     }
-                    final TextComponent.Builder innerBuilder = TextComponent.builder();
                     final String textFormat = this.handleText(chatChannel, player, channelFormatSection.getText());
                     String messageText = stripColor(message);
 
@@ -149,21 +154,36 @@ public class ChatHandler {
                                 chatChannel.getChannelConfiguration().getPingFormat().replace("%name%", receiver.getName())));
                     }
 
-                    innerBuilder.append(LegacyComponentSerializer.INSTANCE.deserialize(textFormat.replace("%message%", messageText), '&'));
-                    if (channelFormatSection.getHoverText() != null && !channelFormatSection.getHoverText().isEmpty()) {
-                        innerBuilder.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, LegacyComponentSerializer
-                            .INSTANCE.deserialize(handleText(chatChannel, player, channelFormatSection.getHoverText()), '&')));
+                    if (!textFormat.contains("%message%") || this.fragments.isEmpty()) {
+                        final TextComponent.Builder innerBuilder = TextComponent.builder();
+                        handleFormatting(builder, innerBuilder, chatChannel, player, channelFormatSection, textFormat, messageText);
                     } else {
-                        innerBuilder.hoverEvent(null);
+                        final Matcher matcher = FRAGMENT_PATTERN.matcher(messageText);
+                        int oldIndex = 0;
+                        while (matcher.find()) {
+                            final String group = matcher.group();
+                            // Everything before the group and after oldIndex is treated as a normal message
+                            final int maxIndex = messageText.indexOf(group);
+                            final String normalMessage = message.substring(oldIndex, maxIndex);
+                            // Replace the normal message
+                            final TextComponent.Builder innerBuilder = TextComponent.builder();
+                            this.handleFormatting(builder, innerBuilder, chatChannel, player,
+                                channelFormatSection, textFormat, normalMessage);
+                            // Insert the fragment
+                            for (final ChatFragment fragment : this.fragments) {
+                                if (fragment.getFormatKeys().contains(matcher.group("key".toLowerCase()))) {
+                                    builder.append(fragment.createFragment(player));
+                                    break;
+                                }
+                            }
+                            oldIndex = maxIndex + group.length();
+                        }
+                        if (oldIndex + 1 <= message.length()) {
+                            final TextComponent.Builder innerBuilder = TextComponent.builder();
+                            this.handleFormatting(builder, innerBuilder, chatChannel, player,
+                                channelFormatSection, textFormat, message.substring(oldIndex));
+                        }
                     }
-                    if (channelFormatSection.getClickText() != null && channelFormatSection.getClickAction() != null &&
-                        !channelFormatSection.getClickText().isEmpty()) {
-                        innerBuilder.clickEvent(ClickEvent.of(channelFormatSection.getClickAction(),
-                            handleText(chatChannel, player, channelFormatSection.getClickText())));
-                    } else {
-                        innerBuilder.clickEvent(null);
-                    }
-                    builder.append(innerBuilder.build());
                 }
                 receiver.sendMessage(new ChatMessage(chatChannel, player, builder.build(), message));
             }
@@ -174,6 +194,27 @@ public class ChatHandler {
         } else {
             sendTask.run();
         }
+    }
+
+    private void handleFormatting(final TextComponent.Builder builder, final TextComponent.Builder innerBuilder,
+        final ChatChannel chatChannel, final ChatPlayer player,
+        final ChannelConfiguration.ChannelFormatSection channelFormatSection, final String textFormat, final String message) {
+        innerBuilder.append(LegacyComponentSerializer.INSTANCE.deserialize(textFormat.replace("%message%", message), '&'));
+        if (channelFormatSection.getHoverText() != null && !channelFormatSection.getHoverText().isEmpty()) {
+            innerBuilder.hoverEvent(
+                HoverEvent.of(HoverEvent.Action.SHOW_TEXT, LegacyComponentSerializer
+                    .INSTANCE.deserialize(handleText(chatChannel, player, channelFormatSection.getHoverText()), '&')));
+        } else {
+            innerBuilder.hoverEvent(null);
+        }
+        if (channelFormatSection.getClickText() != null && channelFormatSection.getClickAction() != null &&
+            !channelFormatSection.getClickText().isEmpty()) {
+            innerBuilder.clickEvent(ClickEvent.of(channelFormatSection.getClickAction(),
+                handleText(chatChannel, player, channelFormatSection.getClickText())));
+        } else {
+            innerBuilder.clickEvent(null);
+        }
+        builder.append(innerBuilder.build());
     }
 
     @NotNull private String handleText(@NotNull final ChatChannel channel,
@@ -190,6 +231,10 @@ public class ChatHandler {
         return PlaceholderAPI.setPlaceholders(player, format).replace("%channel%",
             channel.getChannelConfiguration().getDisplayName()).replace("%channel_id%",
             channel.getKey().toLowerCase());
+    }
+
+    public void addFragment(@NotNull final ChatFragment fragment) {
+        this.fragments.add(Preconditions.checkNotNull(fragment));
     }
 
 }

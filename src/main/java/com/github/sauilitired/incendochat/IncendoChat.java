@@ -22,6 +22,7 @@ import com.github.sauilitired.incendochat.chat.ChannelConfiguration;
 import com.github.sauilitired.incendochat.chat.ChannelRegistry;
 import com.github.sauilitired.incendochat.chat.GlobalChatChannel;
 import com.github.sauilitired.incendochat.chat.StaticChatChannel;
+import com.github.sauilitired.incendochat.chat.fragments.ItemFragment;
 import com.github.sauilitired.incendochat.commands.ChannelCommand;
 import com.github.sauilitired.incendochat.listeners.ChatListener;
 import com.github.sauilitired.incendochat.listeners.PlayerListener;
@@ -38,7 +39,6 @@ public final class IncendoChat extends JavaPlugin {
     private PersistenceHandler persistenceHandler;
 
     @Override public void onEnable() {
-
         // Save default configuration
         this.saveDefaultConfig();
 
@@ -68,6 +68,14 @@ public final class IncendoChat extends JavaPlugin {
 
         // Setup chat handler
         this.chatHandler = new ChatHandler(this.persistenceHandler);
+
+        // Add default fragments
+        try {
+            this.chatHandler.addFragment(new ItemFragment());
+        } catch (final Exception e) {
+            getLogger().severe("Failed to initialize item fragment");
+            e.printStackTrace();
+        }
 
         // Register events
         getServer().getPluginManager().registerEvents(new ChatListener(this.chatHandler), this);
