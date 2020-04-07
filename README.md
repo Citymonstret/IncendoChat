@@ -1,5 +1,7 @@
 # IncendoChat
 
+Spigot: [link](https://www.spigotmc.org/resources/incendochat.77124/)
+
 **Work in progress!** 
 
 Very simple channel based chat plugin. Will support the following features:
